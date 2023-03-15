@@ -1,5 +1,5 @@
 /******************Stored Procedure For Courses*************/
-/*Create Procedure coursesproc
+Create Procedure coursesproc
 (  
    @Id INTEGER, 
    @Title VARCHAR(max) = NULL, 
@@ -47,11 +47,11 @@ EXEC coursesproc
  --Select In Courses Table
  EXEC coursesproc 
  @Id=1,
- @ActionType = 'Select'*/
+ @ActionType = 'Select'
 
 /******************Stored Procedure For departments******************/
 
-/*Create Procedure departmentsproc
+Create Procedure departmentsproc
 (  
    @Id INTEGER, 
     @DeptName nvarchar(50), 
@@ -102,7 +102,7 @@ EXEC departmentsproc
  @Id=0,
  @DeptName='',
  @ActionType = 'Select'
- */
+ 
 
  /******************Stored Procedure For dept_Crs******************/
  Create Procedure dept_Crsproc
