@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -81,8 +82,19 @@ namespace ExamAPP
                    .HasForeignKey(e => e.Ex_ID);
 
 
-                #endregion
+            #endregion
 
+            #endregion
+
+
+            #region Mina & Mona
+                modelBuilder.Entity<Student>(config =>
+                {
+                    config.HasOne(s => s.department)
+                    .WithMany(q => q.students)
+                    .HasForeignKey(s => s.DeptId);
+
+                });
             #endregion
             base.OnModelCreating(modelBuilder); 
         }
