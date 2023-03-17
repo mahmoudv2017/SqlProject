@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExamAPP.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230315103956_v9")]
-    partial class v9
+    [Migration("20230316233152_v2")]
+    partial class v2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,13 @@ namespace ExamAPP.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("courses");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Title = "course_1"
+                        });
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Department", b =>
@@ -191,9 +198,18 @@ namespace ExamAPP.Migrations
                     b.HasIndex("CrsID");
 
                     b.ToTable("Exams");
+
+                    b.HasData(
+                        new
+                        {
+                            Ex_Id = 1,
+                            CrsID = 1,
+                            Ex_Marks = 50,
+                            Ex_Name = "asd"
+                        });
                 });
 
-            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Exam_Question", b =>
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Exam_Question_Crs", b =>
                 {
                     b.Property<int>("Ex_ID")
                         .HasColumnType("int");
@@ -201,11 +217,24 @@ namespace ExamAPP.Migrations
                     b.Property<int>("Ques_ID")
                         .HasColumnType("int");
 
-                    b.HasKey("Ex_ID", "Ques_ID");
+                    b.Property<int>("Crs_ID")
+                        .HasColumnType("int");
+
+                    b.HasKey("Ex_ID", "Ques_ID", "Crs_ID");
+
+                    b.HasIndex("Crs_ID");
 
                     b.HasIndex("Ques_ID");
 
-                    b.ToTable("Exam_Question");
+                    b.ToTable("Exam_Question_Crs");
+
+                    b.HasData(
+                        new
+                        {
+                            Ex_ID = 1,
+                            Ques_ID = 1,
+                            Crs_ID = 1
+                        });
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Mahmoud.Question", b =>
@@ -223,6 +252,9 @@ namespace ExamAPP.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("CrsID")
+                        .HasColumnType("int");
+
                     b.Property<int>("Q_Mark")
                         .HasColumnType("int");
 
@@ -236,7 +268,46 @@ namespace ExamAPP.Migrations
 
                     b.HasKey("Q_Id");
 
+                    b.HasIndex("CrsID");
+
                     b.ToTable("Questions");
+
+                    b.HasData(
+                        new
+                        {
+                            Q_Id = 1,
+                            AnsID = 1,
+                            AnsTitle = "asdjnasd",
+                            CrsID = 1,
+                            Q_Mark = 25,
+                            QuesTitle = "asdasd",
+                            type = "MCQ"
+                        });
+                });
+
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Stude_Answers", b =>
+                {
+                    b.Property<int>("Ex_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Q_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stud_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ch_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Ex_id", "Q_id", "Stud_id");
+
+                    b.HasIndex("Q_id");
+
+                    b.HasIndex("Stud_id");
+
+                    b.HasIndex("ch_id");
+
+                    b.ToTable("Stude_Answers");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Mahmoud.Student_Exams", b =>
@@ -416,23 +487,77 @@ namespace ExamAPP.Migrations
                     b.Navigation("Course");
                 });
 
-            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Exam_Question", b =>
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Exam_Question_Crs", b =>
                 {
+                    b.HasOne("ExamAPP.Models.Course", "Course")
+                        .WithMany("Exam_Question_Crs")
+                        .HasForeignKey("Crs_ID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("ExamAPP.Models.Mahmoud.Exam", "Exam")
-                        .WithMany("Exam_Question")
+                        .WithMany("Exam_Question_Crs")
                         .HasForeignKey("Ex_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ExamAPP.Models.Mahmoud.Question", "Ex_Questions")
-                        .WithMany("Exam_Question")
+                        .WithMany("Exam_Question_Crs")
                         .HasForeignKey("Ques_ID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("Course");
 
                     b.Navigation("Ex_Questions");
 
                     b.Navigation("Exam");
+                });
+
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Question", b =>
+                {
+                    b.HasOne("ExamAPP.Models.Course", "Course")
+                        .WithMany("Question")
+                        .HasForeignKey("CrsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Stude_Answers", b =>
+                {
+                    b.HasOne("ExamAPP.Models.Mahmoud.Exam", "Exam")
+                        .WithMany("Stude_Answers")
+                        .HasForeignKey("Ex_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ExamAPP.Models.Mahmoud.Question", "Question")
+                        .WithMany("Stude_Answers")
+                        .HasForeignKey("Q_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ExamAPP.Models.Student", "Student")
+                        .WithMany("Stude_Answers")
+                        .HasForeignKey("Stud_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ExamAPP.Models.Mahmoud.Choices", "Answer")
+                        .WithMany("Stude_Answers")
+                        .HasForeignKey("ch_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("Exam");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Mahmoud.Student_Exams", b =>
@@ -499,7 +624,11 @@ namespace ExamAPP.Migrations
                 {
                     b.Navigation("Crs_Exams");
 
+                    b.Navigation("Exam_Question_Crs");
+
                     b.Navigation("Ins_Courses");
+
+                    b.Navigation("Question");
 
                     b.Navigation("Stud_Crs");
 
@@ -527,9 +656,16 @@ namespace ExamAPP.Migrations
                     b.Navigation("Ins_Departments");
                 });
 
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Choices", b =>
+                {
+                    b.Navigation("Stude_Answers");
+                });
+
             modelBuilder.Entity("ExamAPP.Models.Mahmoud.Exam", b =>
                 {
-                    b.Navigation("Exam_Question");
+                    b.Navigation("Exam_Question_Crs");
+
+                    b.Navigation("Stude_Answers");
 
                     b.Navigation("Student_Exams");
                 });
@@ -538,12 +674,16 @@ namespace ExamAPP.Migrations
                 {
                     b.Navigation("Choices");
 
-                    b.Navigation("Exam_Question");
+                    b.Navigation("Exam_Question_Crs");
+
+                    b.Navigation("Stude_Answers");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Student", b =>
                 {
                     b.Navigation("Stud_Crs");
+
+                    b.Navigation("Stude_Answers");
 
                     b.Navigation("Student_Exams");
                 });

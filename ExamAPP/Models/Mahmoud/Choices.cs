@@ -15,6 +15,7 @@ namespace ExamAPP.Models.Mahmoud
         public int Q_ID { get; set; }
 
         public Question? Question { get; set; }
+        public ICollection<Stude_Answers>? Stude_Answers { get; set; }
 
     }
 }

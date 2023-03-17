@@ -20,5 +20,6 @@ namespace ExamAPP.Models
         public Department ?department { get; set; }
         public ICollection<Stud_Crs>? Stud_Crs { get; set; }
         public ICollection<Student_Exams>? Student_Exams { get; set; }
+        public ICollection<Stude_Answers>? Stude_Answers { get; set; }
     }
 }

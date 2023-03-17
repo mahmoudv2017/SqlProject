@@ -15,8 +15,9 @@ namespace ExamAPP.Models.Mahmoud
 
         public Course Course { get; set; }= new Course();
 
+        public ICollection<Stude_Answers>? Stude_Answers { get; set; }
         public ICollection<Student_Exams>? Student_Exams { get; set; }
-        public ICollection<Exam_Question> Exam_Question { get; set; } = new List<Exam_Question>();
+        public ICollection<Exam_Question_Crs> Exam_Question_Crs { get; set; } = new List<Exam_Question_Crs>();
 
     }
 }

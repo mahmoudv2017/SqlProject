@@ -15,5 +15,8 @@ namespace ExamAPP.Models
         public  ICollection<Ins_Course>? Ins_Courses { get; set; }
         public ICollection<Stud_Crs>? Stud_Crs { get; set; }
         public ICollection<Exam>? Crs_Exams { get; set; }
+        public ICollection<Question>? Question { get; set; }
+        public ICollection<Exam_Question_Crs> Exam_Question_Crs { get; set; } = new List<Exam_Question_Crs>();
+
     }
 }

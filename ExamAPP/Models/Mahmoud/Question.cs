@@ -13,11 +13,12 @@ namespace ExamAPP.Models.Mahmoud
         public string type { get; set; } = string.Empty;
         public string AnsTitle { get; set; } = string.Empty;
         public int AnsID { get; set; }
-
+        public int CrsID { get; set; }
         public int Q_Mark { get; set; }
         public ICollection<Choices> Choices { get; set; } = new List<Choices>();
-
-        public ICollection<Exam_Question> Exam_Question { get; set; } = new List<Exam_Question>();
+        public Course? Course { get; set; }
+        public ICollection<Exam_Question_Crs> Exam_Question_Crs { get; set; } = new List<Exam_Question_Crs>();
+        public ICollection<Stude_Answers>? Stude_Answers { get; set; }
 
 
     }
