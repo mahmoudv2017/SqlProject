@@ -411,3 +411,87 @@ exec @x =  test
 select @x;
 
 
+/* ============================ Exam Answers =========================*/
+
+select * from Stude_Answers;
+delete from Stude_Answers;
+select Distinct ch_title from choices;
+
+alter proc ExamAnswers @Ex_ID int ,  @st_ID int , @stAns1 varchar(20) , @stAns2 varchar(20)
+as
+
+ -- cross refernce each answer with the choices table to get the correct CH_ID , Q_ID
+ -- using the CH_ID , Q_ID add the Ex_id and St_ID to make a record in the student_Answers
+
+
+	declare @stAnsTable Table(ans varchar(200))
+	insert into @stAnsTable values(@stAns1),(@stAns2)
+
+
+	--declare c1 cursor make a forloop for @stAnstable
+
+	insert into Stude_Answers
+	select  2 as Stud_id , 1 as Ex_ID ,  eqc.Ques_ID as Q_id ,  c.CH_ID from Exam_Question_crs eqc , Choices c
+	where ex_id=1 and eqc.Ques_ID=c.CH_ID  and Lower(ch_title)=Lower('Choice#1')
+	order by Ques_ID
+
+ --declare c1 cursor
+ --declare count 10
+ --while(count >= 0)
+
+ ExamAnswers @Ex_id = 1 , @st_ID=2 , @stAns1='Choice#1' , @stAns2='Choice#2'
+
+
+
+
+
+
+
+
+
+
+
+
+
+ /*=============================== Exam Correction =======================*/
+ use examDB
+ select * from questions;
+ select * from stude_answers;
+  select * from student_exams;
+  select * from Exam_Question_Crs	order by Ex_ID	 
+  select * from stud_crs;
+
+ alter proc ExamCorrection @ex_id int , @st_id int
+ as
+	
+	declare @crsID int
+	select @crsID=CrsID from Exams where ex_id=1
+
+	insert into stud_crs
+	select @crsID , @st_id , sum(q.Q_mark) from stude_answers sa , Questions q
+	where sa.stud_id=@st_id and sa.q_id = q.q_id and q.AnsID=sa.ch_id
+
+
+ExamCorrection 1, 2
+
+
+--take out the grade from student_exams
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+

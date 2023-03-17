@@ -162,6 +162,66 @@ namespace ExamAPP
                     .HasForeignKey(s => s.DeptId);
 
                 });
+
+            modelBuilder.Entity<Ins_Course>(config =>
+            {
+                config.HasKey(e => new { e.Course_Id, e.Instructor_Id });
+                config.HasOne(s => s.courses)
+                .WithMany(q => q.Ins_Courses)
+                .HasForeignKey(s => s.Course_Id)
+                .OnDelete(DeleteBehavior.NoAction);
+
+                config.HasOne(s => s.Instructors)
+                .WithMany(ins => ins.Ins_Courses)
+                .HasForeignKey(e => e.Instructor_Id)
+                 .OnDelete(DeleteBehavior.NoAction);
+
+            });
+
+            modelBuilder.Entity<Topic>(config =>
+            {
+                config.HasKey(e => new { e.ID, e.courseId });
+                config.HasOne(e => e.courses)
+                .WithMany(e => e.Topics)
+                .HasForeignKey(e => e.courseId);
+            });
+
+
+            modelBuilder.Entity<Dept_Crs>(config =>
+            {
+                config.HasKey(e => new { e.Course_Id, e.Department_Id });
+                config.HasOne(e => e.Course)
+                .WithMany(e => e.Dept_Crs)
+                .HasForeignKey(e => e.Course_Id);
+
+                config.HasOne(e => e.Department)
+                 .WithMany(e => e.dept_Crs)
+                 .HasForeignKey(e => e.Department_Id);
+            });
+
+            modelBuilder.Entity<Stud_Crs>(config =>
+            {
+                config.HasKey(e => new { e.Course_Id, e.Student_Id });
+                config.HasOne(e => e.Student)
+                .WithMany(e => e.Stud_Crs)
+                .HasForeignKey(e => e.Student_Id);
+
+                config.HasOne(e => e.Course)
+                 .WithMany(e => e.Stud_Crs)
+                 .HasForeignKey(e => e.Course_Id);
+            });
+
+            modelBuilder.Entity<Ins_Department>(config =>
+            {
+                config.HasKey(e => new { e.Ins_ID, e.Dept_ID });
+                config.HasOne(e => e.Instructor)
+                .WithMany(e => e.Ins_Departments)
+                .HasForeignKey(e => e.Ins_ID);
+
+                config.HasOne(e => e.Departments)
+                 .WithMany(e => e.Ins_Departments)
+                 .HasForeignKey(e => e.Dept_ID);
+            });
             #endregion
 
 

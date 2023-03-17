@@ -99,18 +99,41 @@ namespace ExamAPP.Migrations
                 name: "topics",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ID = table.Column<int>(type: "int", nullable: false),
                     courseId = table.Column<int>(type: "int", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_topics", x => x.ID);
+                    table.PrimaryKey("PK_topics", x => new { x.ID, x.courseId });
                     table.ForeignKey(
                         name: "FK_topics_courses_courseId",
                         column: x => x.courseId,
                         principalTable: "courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "dept_Crs",
+                columns: table => new
+                {
+                    Course_Id = table.Column<int>(type: "int", nullable: false),
+                    Department_Id = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_dept_Crs", x => new { x.Course_Id, x.Department_Id });
+                    table.ForeignKey(
+                        name: "FK_dept_Crs_courses_Course_Id",
+                        column: x => x.Course_Id,
+                        principalTable: "courses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_dept_Crs_departments_Department_Id",
+                        column: x => x.Department_Id,
+                        principalTable: "departments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -144,26 +167,22 @@ namespace ExamAPP.Migrations
                 name: "ins_Courses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    courseId = table.Column<int>(type: "int", nullable: false),
-                    instructorId = table.Column<int>(type: "int", nullable: false)
+                    Course_Id = table.Column<int>(type: "int", nullable: false),
+                    Instructor_Id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ins_Courses", x => x.Id);
+                    table.PrimaryKey("PK_ins_Courses", x => new { x.Course_Id, x.Instructor_Id });
                     table.ForeignKey(
-                        name: "FK_ins_Courses_courses_courseId",
-                        column: x => x.courseId,
+                        name: "FK_ins_Courses_courses_Course_Id",
+                        column: x => x.Course_Id,
                         principalTable: "courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_ins_Courses_instructors_instructorId",
-                        column: x => x.instructorId,
+                        name: "FK_ins_Courses_instructors_Instructor_Id",
+                        column: x => x.Instructor_Id,
                         principalTable: "instructors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -244,23 +263,22 @@ namespace ExamAPP.Migrations
                 name: "stud_Crs",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    courseId = table.Column<int>(type: "int", nullable: false),
-                    studentId = table.Column<int>(type: "int", nullable: false)
+                    Course_Id = table.Column<int>(type: "int", nullable: false),
+                    Student_Id = table.Column<int>(type: "int", nullable: false),
+                    Grade = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_stud_Crs", x => x.Id);
+                    table.PrimaryKey("PK_stud_Crs", x => new { x.Course_Id, x.Student_Id });
                     table.ForeignKey(
-                        name: "FK_stud_Crs_courses_courseId",
-                        column: x => x.courseId,
+                        name: "FK_stud_Crs_courses_Course_Id",
+                        column: x => x.Course_Id,
                         principalTable: "courses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_stud_Crs_students_studentId",
-                        column: x => x.studentId,
+                        name: "FK_stud_Crs_students_Student_Id",
+                        column: x => x.Student_Id,
                         principalTable: "students",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
@@ -292,30 +310,37 @@ namespace ExamAPP.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "dept_Crs",
+                name: "Stude_Answers",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    courseId = table.Column<int>(type: "int", nullable: false),
-                    departmentId = table.Column<int>(type: "int", nullable: false),
-                    Ins_Courseid = table.Column<int>(type: "int", nullable: false)
+                    Stud_id = table.Column<int>(type: "int", nullable: false),
+                    Ex_id = table.Column<int>(type: "int", nullable: false),
+                    Q_id = table.Column<int>(type: "int", nullable: false),
+                    ch_id = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_dept_Crs", x => x.ID);
+                    table.PrimaryKey("PK_Stude_Answers", x => new { x.Ex_id, x.Q_id, x.Stud_id });
                     table.ForeignKey(
-                        name: "FK_dept_Crs_departments_departmentId",
-                        column: x => x.departmentId,
-                        principalTable: "departments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Stude_Answers_Choices_ch_id",
+                        column: x => x.ch_id,
+                        principalTable: "Choices",
+                        principalColumn: "Ch_Id");
                     table.ForeignKey(
-                        name: "FK_dept_Crs_ins_Courses_Ins_Courseid",
-                        column: x => x.Ins_Courseid,
-                        principalTable: "ins_Courses",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Stude_Answers_Exams_Ex_id",
+                        column: x => x.Ex_id,
+                        principalTable: "Exams",
+                        principalColumn: "Ex_Id");
+                    table.ForeignKey(
+                        name: "FK_Stude_Answers_Questions_Q_id",
+                        column: x => x.Q_id,
+                        principalTable: "Questions",
+                        principalColumn: "Q_Id");
+                    table.ForeignKey(
+                        name: "FK_Stude_Answers_students_Stud_id",
+                        column: x => x.Stud_id,
+                        principalTable: "students",
+                        principalColumn: "ID");
                 });
 
             migrationBuilder.InsertData(
@@ -344,14 +369,9 @@ namespace ExamAPP.Migrations
                 column: "Q_ID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_dept_Crs_departmentId",
+                name: "IX_dept_Crs_Department_Id",
                 table: "dept_Crs",
-                column: "departmentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_dept_Crs_Ins_Courseid",
-                table: "dept_Crs",
-                column: "Ins_Courseid");
+                column: "Department_Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Exam_Question_Crs_Crs_ID",
@@ -369,14 +389,9 @@ namespace ExamAPP.Migrations
                 column: "CrsID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ins_Courses_courseId",
+                name: "IX_ins_Courses_Instructor_Id",
                 table: "ins_Courses",
-                column: "courseId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ins_Courses_instructorId",
-                table: "ins_Courses",
-                column: "instructorId");
+                column: "Instructor_Id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ins_Departments_departmentId",
@@ -394,14 +409,24 @@ namespace ExamAPP.Migrations
                 column: "CrsID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_stud_Crs_courseId",
+                name: "IX_stud_Crs_Student_Id",
                 table: "stud_Crs",
-                column: "courseId");
+                column: "Student_Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_stud_Crs_studentId",
-                table: "stud_Crs",
-                column: "studentId");
+                name: "IX_Stude_Answers_ch_id",
+                table: "Stude_Answers",
+                column: "ch_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stude_Answers_Q_id",
+                table: "Stude_Answers",
+                column: "Q_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Stude_Answers_Stud_id",
+                table: "Stude_Answers",
+                column: "Stud_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Student_Exams_Ex_ID",
@@ -423,13 +448,13 @@ namespace ExamAPP.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Choices");
-
-            migrationBuilder.DropTable(
                 name: "dept_Crs");
 
             migrationBuilder.DropTable(
                 name: "Exam_Question_Crs");
+
+            migrationBuilder.DropTable(
+                name: "ins_Courses");
 
             migrationBuilder.DropTable(
                 name: "ins_Departments");
@@ -438,16 +463,19 @@ namespace ExamAPP.Migrations
                 name: "stud_Crs");
 
             migrationBuilder.DropTable(
+                name: "Stude_Answers");
+
+            migrationBuilder.DropTable(
                 name: "Student_Exams");
 
             migrationBuilder.DropTable(
                 name: "topics");
 
             migrationBuilder.DropTable(
-                name: "ins_Courses");
+                name: "instructors");
 
             migrationBuilder.DropTable(
-                name: "Questions");
+                name: "Choices");
 
             migrationBuilder.DropTable(
                 name: "Exams");
@@ -456,13 +484,13 @@ namespace ExamAPP.Migrations
                 name: "students");
 
             migrationBuilder.DropTable(
-                name: "instructors");
-
-            migrationBuilder.DropTable(
-                name: "courses");
+                name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "departments");
+
+            migrationBuilder.DropTable(
+                name: "courses");
         }
     }
 }

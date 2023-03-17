@@ -17,7 +17,7 @@ namespace ExamAPP.Models
         public int Age { get; set; }
         public int DeptId { get; set; }
         public string? DeptName { get; set; }
-        public Department ?department { get; set; }
+        public Department? department { get; set; }
         public ICollection<Stud_Crs>? Stud_Crs { get; set; }
         public ICollection<Student_Exams>? Student_Exams { get; set; }
         public ICollection<Stude_Answers>? Stude_Answers { get; set; }

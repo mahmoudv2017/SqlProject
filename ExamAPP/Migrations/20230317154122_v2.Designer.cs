@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExamAPP.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230315201905_v1")]
-    partial class v1
+    [Migration("20230317154122_v2")]
+    partial class v2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,72 +67,45 @@ namespace ExamAPP.Migrations
 
             modelBuilder.Entity("ExamAPP.Models.Dept_Crs", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Course_Id")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int>("Ins_Courseid")
+                    b.Property<int>("Department_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("courseId")
-                        .HasColumnType("int");
+                    b.HasKey("Course_Id", "Department_Id");
 
-                    b.Property<int>("departmentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("Ins_Courseid");
-
-                    b.HasIndex("departmentId");
+                    b.HasIndex("Department_Id");
 
                     b.ToTable("dept_Crs");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Ins_Course", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Course_Id")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("courseId")
+                    b.Property<int>("Instructor_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("instructorId")
-                        .HasColumnType("int");
+                    b.HasKey("Course_Id", "Instructor_Id");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("courseId");
-
-                    b.HasIndex("instructorId");
+                    b.HasIndex("Instructor_Id");
 
                     b.ToTable("ins_Courses");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Ins_Department", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Ins_ID")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("departmentId")
+                    b.Property<int>("Dept_ID")
                         .HasColumnType("int");
 
-                    b.Property<int>("instructorId")
-                        .HasColumnType("int");
+                    b.HasKey("Ins_ID", "Dept_ID");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("departmentId");
-
-                    b.HasIndex("instructorId");
+                    b.HasIndex("Dept_ID");
 
                     b.ToTable("ins_Departments");
                 });
@@ -285,6 +258,31 @@ namespace ExamAPP.Migrations
                         });
                 });
 
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Stude_Answers", b =>
+                {
+                    b.Property<int>("Ex_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Q_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Stud_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ch_id")
+                        .HasColumnType("int");
+
+                    b.HasKey("Ex_id", "Q_id", "Stud_id");
+
+                    b.HasIndex("Q_id");
+
+                    b.HasIndex("Stud_id");
+
+                    b.HasIndex("ch_id");
+
+                    b.ToTable("Stude_Answers");
+                });
+
             modelBuilder.Entity("ExamAPP.Models.Mahmoud.Student_Exams", b =>
                 {
                     b.Property<int>("St_ID")
@@ -305,23 +303,18 @@ namespace ExamAPP.Migrations
 
             modelBuilder.Entity("ExamAPP.Models.Stud_Crs", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Course_Id")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("courseId")
+                    b.Property<int>("Student_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("studentId")
+                    b.Property<int>("Grade")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Course_Id", "Student_Id");
 
-                    b.HasIndex("courseId");
-
-                    b.HasIndex("studentId");
+                    b.HasIndex("Student_Id");
 
                     b.ToTable("stud_Crs");
                 });
@@ -365,18 +358,15 @@ namespace ExamAPP.Migrations
             modelBuilder.Entity("ExamAPP.Models.Topic", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("courseId")
                         .HasColumnType("int");
 
-                    b.HasKey("ID");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID", "courseId");
 
                     b.HasIndex("courseId");
 
@@ -385,35 +375,35 @@ namespace ExamAPP.Migrations
 
             modelBuilder.Entity("ExamAPP.Models.Dept_Crs", b =>
                 {
-                    b.HasOne("ExamAPP.Models.Ins_Course", "Ins_Course")
-                        .WithMany("dept_Crs")
-                        .HasForeignKey("Ins_Courseid")
+                    b.HasOne("ExamAPP.Models.Course", "Course")
+                        .WithMany("Dept_Crs")
+                        .HasForeignKey("Course_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ExamAPP.Models.Department", "department")
+                    b.HasOne("ExamAPP.Models.Department", "Department")
                         .WithMany("dept_Crs")
-                        .HasForeignKey("departmentId")
+                        .HasForeignKey("Department_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Ins_Course");
+                    b.Navigation("Course");
 
-                    b.Navigation("department");
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Ins_Course", b =>
                 {
                     b.HasOne("ExamAPP.Models.Course", "courses")
                         .WithMany("Ins_Courses")
-                        .HasForeignKey("courseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Course_Id")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ExamAPP.Models.Instructor", "Instructors")
                         .WithMany("Ins_Courses")
-                        .HasForeignKey("instructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Instructor_Id")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Instructors");
@@ -425,19 +415,19 @@ namespace ExamAPP.Migrations
                 {
                     b.HasOne("ExamAPP.Models.Department", "Departments")
                         .WithMany("Ins_Departments")
-                        .HasForeignKey("departmentId")
+                        .HasForeignKey("Dept_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ExamAPP.Models.Instructor", "instructor")
+                    b.HasOne("ExamAPP.Models.Instructor", "Instructor")
                         .WithMany("Ins_Departments")
-                        .HasForeignKey("instructorId")
+                        .HasForeignKey("Ins_ID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Departments");
 
-                    b.Navigation("instructor");
+                    b.Navigation("Instructor");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Mahmoud.Choices", b =>
@@ -500,6 +490,41 @@ namespace ExamAPP.Migrations
                     b.Navigation("Course");
                 });
 
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Stude_Answers", b =>
+                {
+                    b.HasOne("ExamAPP.Models.Mahmoud.Exam", "Exam")
+                        .WithMany("Stude_Answers")
+                        .HasForeignKey("Ex_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ExamAPP.Models.Mahmoud.Question", "Question")
+                        .WithMany("Stude_Answers")
+                        .HasForeignKey("Q_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ExamAPP.Models.Student", "Student")
+                        .WithMany("Stude_Answers")
+                        .HasForeignKey("Stud_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ExamAPP.Models.Mahmoud.Choices", "Answer")
+                        .WithMany("Stude_Answers")
+                        .HasForeignKey("ch_id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
+
+                    b.Navigation("Exam");
+
+                    b.Navigation("Question");
+
+                    b.Navigation("Student");
+                });
+
             modelBuilder.Entity("ExamAPP.Models.Mahmoud.Student_Exams", b =>
                 {
                     b.HasOne("ExamAPP.Models.Mahmoud.Exam", "Exam")
@@ -523,13 +548,13 @@ namespace ExamAPP.Migrations
                 {
                     b.HasOne("ExamAPP.Models.Course", "Course")
                         .WithMany("Stud_Crs")
-                        .HasForeignKey("courseId")
+                        .HasForeignKey("Course_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ExamAPP.Models.Student", "Student")
                         .WithMany("Stud_Crs")
-                        .HasForeignKey("studentId")
+                        .HasForeignKey("Student_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -564,6 +589,8 @@ namespace ExamAPP.Migrations
                 {
                     b.Navigation("Crs_Exams");
 
+                    b.Navigation("Dept_Crs");
+
                     b.Navigation("Exam_Question_Crs");
 
                     b.Navigation("Ins_Courses");
@@ -584,11 +611,6 @@ namespace ExamAPP.Migrations
                     b.Navigation("students");
                 });
 
-            modelBuilder.Entity("ExamAPP.Models.Ins_Course", b =>
-                {
-                    b.Navigation("dept_Crs");
-                });
-
             modelBuilder.Entity("ExamAPP.Models.Instructor", b =>
                 {
                     b.Navigation("Ins_Courses");
@@ -596,9 +618,16 @@ namespace ExamAPP.Migrations
                     b.Navigation("Ins_Departments");
                 });
 
+            modelBuilder.Entity("ExamAPP.Models.Mahmoud.Choices", b =>
+                {
+                    b.Navigation("Stude_Answers");
+                });
+
             modelBuilder.Entity("ExamAPP.Models.Mahmoud.Exam", b =>
                 {
                     b.Navigation("Exam_Question_Crs");
+
+                    b.Navigation("Stude_Answers");
 
                     b.Navigation("Student_Exams");
                 });
@@ -608,11 +637,15 @@ namespace ExamAPP.Migrations
                     b.Navigation("Choices");
 
                     b.Navigation("Exam_Question_Crs");
+
+                    b.Navigation("Stude_Answers");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Student", b =>
                 {
                     b.Navigation("Stud_Crs");
+
+                    b.Navigation("Stude_Answers");
 
                     b.Navigation("Student_Exams");
                 });

@@ -8,11 +8,9 @@ namespace ExamAPP.Models
 {
     public class Dept_Crs
     {
-        public int ID { get; set; }
-        public int courseId { get; set; }
-        public int departmentId { get; set; }
-        public int Ins_Courseid {get; set; }
-      public Department? department { get; set; }
-        public Ins_Course? Ins_Course { get; set; }
+        public int Course_Id { get; set; }
+        public int Department_Id { get; set; }
+      public Course? Course { get; set; }
+      public Department? Department { get; set; }
     }
 }

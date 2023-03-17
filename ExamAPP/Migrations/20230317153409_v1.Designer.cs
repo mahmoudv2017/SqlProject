@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExamAPP.Migrations
 {
     [DbContext(typeof(MyDbContext))]
-    [Migration("20230316233152_v2")]
-    partial class v2
+    [Migration("20230317153409_v1")]
+    partial class v1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -67,49 +67,30 @@ namespace ExamAPP.Migrations
 
             modelBuilder.Entity("ExamAPP.Models.Dept_Crs", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Course_Id")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<int>("Ins_Courseid")
+                    b.Property<int>("Department_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("courseId")
-                        .HasColumnType("int");
+                    b.HasKey("Course_Id", "Department_Id");
 
-                    b.Property<int>("departmentId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("Ins_Courseid");
-
-                    b.HasIndex("departmentId");
+                    b.HasIndex("Department_Id");
 
                     b.ToTable("dept_Crs");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Ins_Course", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Course_Id")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("courseId")
+                    b.Property<int>("Instructor_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("instructorId")
-                        .HasColumnType("int");
+                    b.HasKey("Course_Id", "Instructor_Id");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("courseId");
-
-                    b.HasIndex("instructorId");
+                    b.HasIndex("Instructor_Id");
 
                     b.ToTable("ins_Courses");
                 });
@@ -330,23 +311,18 @@ namespace ExamAPP.Migrations
 
             modelBuilder.Entity("ExamAPP.Models.Stud_Crs", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("Course_Id")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("courseId")
+                    b.Property<int>("Student_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("studentId")
+                    b.Property<int>("Grade")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("Course_Id", "Student_Id");
 
-                    b.HasIndex("courseId");
-
-                    b.HasIndex("studentId");
+                    b.HasIndex("Student_Id");
 
                     b.ToTable("stud_Crs");
                 });
@@ -390,18 +366,15 @@ namespace ExamAPP.Migrations
             modelBuilder.Entity("ExamAPP.Models.Topic", b =>
                 {
                     b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("courseId")
                         .HasColumnType("int");
 
-                    b.HasKey("ID");
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID", "courseId");
 
                     b.HasIndex("courseId");
 
@@ -410,35 +383,35 @@ namespace ExamAPP.Migrations
 
             modelBuilder.Entity("ExamAPP.Models.Dept_Crs", b =>
                 {
-                    b.HasOne("ExamAPP.Models.Ins_Course", "Ins_Course")
-                        .WithMany("dept_Crs")
-                        .HasForeignKey("Ins_Courseid")
+                    b.HasOne("ExamAPP.Models.Course", "Course")
+                        .WithMany("Dept_Crs")
+                        .HasForeignKey("Course_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ExamAPP.Models.Department", "department")
+                    b.HasOne("ExamAPP.Models.Department", "Department")
                         .WithMany("dept_Crs")
-                        .HasForeignKey("departmentId")
+                        .HasForeignKey("Department_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Ins_Course");
+                    b.Navigation("Course");
 
-                    b.Navigation("department");
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Ins_Course", b =>
                 {
                     b.HasOne("ExamAPP.Models.Course", "courses")
                         .WithMany("Ins_Courses")
-                        .HasForeignKey("courseId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Course_Id")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("ExamAPP.Models.Instructor", "Instructors")
                         .WithMany("Ins_Courses")
-                        .HasForeignKey("instructorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("Instructor_Id")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Instructors");
@@ -583,13 +556,13 @@ namespace ExamAPP.Migrations
                 {
                     b.HasOne("ExamAPP.Models.Course", "Course")
                         .WithMany("Stud_Crs")
-                        .HasForeignKey("courseId")
+                        .HasForeignKey("Course_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ExamAPP.Models.Student", "Student")
                         .WithMany("Stud_Crs")
-                        .HasForeignKey("studentId")
+                        .HasForeignKey("Student_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -624,6 +597,8 @@ namespace ExamAPP.Migrations
                 {
                     b.Navigation("Crs_Exams");
 
+                    b.Navigation("Dept_Crs");
+
                     b.Navigation("Exam_Question_Crs");
 
                     b.Navigation("Ins_Courses");
@@ -642,11 +617,6 @@ namespace ExamAPP.Migrations
                     b.Navigation("dept_Crs");
 
                     b.Navigation("students");
-                });
-
-            modelBuilder.Entity("ExamAPP.Models.Ins_Course", b =>
-                {
-                    b.Navigation("dept_Crs");
                 });
 
             modelBuilder.Entity("ExamAPP.Models.Instructor", b =>
